@@ -6,9 +6,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class Medicine {
-    private int medicineId;
-    private String name;
-    private String category;
+    private final int medicineId;
+    private final String name;
+    private final String category;
     private int quantity;
     private double price;
 
@@ -139,7 +139,7 @@ class Doctor {
     public int getDoctorId() {
         return doctorId;
     }
-
+    
     public String getName() {
         return name;
     }
@@ -219,6 +219,36 @@ class InventoryManager {
     }
 }
 
+class Pharmacist {
+    private int pharmacistId;
+    private String name;
+    private String shift;
+
+    public Pharmacist(int pharmacistId, String name, String shift) {
+        this.pharmacistId = pharmacistId;
+        this.name = name;
+        this.shift = shift;
+    }
+
+    public int getPharmacistId() {
+        return pharmacistId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getShift() {
+        return shift;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Pharmacist ID: %d, Name: %s, Shift: %s",
+                pharmacistId, name, shift);
+    }
+}
+
 class ReportGenerator {
     private ArrayList<Prescription> prescriptions;
     private ArrayList<Medicine> medicines;
@@ -268,13 +298,15 @@ class PharmacyManager {
     private ArrayList<Patient> patients;
     private ArrayList<Medicine> medicines;
     private ArrayList<Prescription> prescriptions;
+    private ArrayList<Pharmacist> pharmacists;
     private Scanner scanner;
-
     public PharmacyManager() {
         doctors = new ArrayList<>();
         patients = new ArrayList<>();
         medicines = new ArrayList<>();
         prescriptions = new ArrayList<>();
+        pharmacists = new ArrayList<>();
+        scanner = new Scanner(System.in);
         scanner = new Scanner(System.in);
     }
 
@@ -308,6 +340,30 @@ class PharmacyManager {
     }
 
     // Interactive addition methods
+    public void addPharmacistInteractive() {
+        try {
+            System.out.println("\nEnter Pharmacist Details:");
+            System.out.print("ID: ");
+            int id = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            if (findPharmacist(id) != null) {
+                System.out.println("Pharmacist ID already exists!");
+                return;
+            }
+
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+            System.out.print("Shift: ");
+            String shift = scanner.nextLine();
+
+            pharmacists.add(new Pharmacist(id, name, shift));
+            System.out.println("Pharmacist added successfully!");
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input! Please enter correct data types.");
+            scanner.nextLine(); // Clear the scanner
+        }
+    }
     public void addDoctorInteractive() {
         try {
             System.out.println("\nEnter Doctor Details:");
@@ -472,6 +528,12 @@ class PharmacyManager {
     }
 
     // Find methods
+    public Pharmacist findPharmacist(int id) {
+        return pharmacists.stream()
+                .filter(p -> p.getPharmacistId() == id)
+                .findFirst()
+                .orElse(null);
+    }
     public Doctor findDoctor(int id) {
         return doctors.stream()
                 .filter(d -> d.getDoctorId() == id)
@@ -526,6 +588,15 @@ class PharmacyManager {
             return;
         }
         medicines.forEach(System.out::println);
+    }
+
+    public void displayPharmacists() {
+        System.out.println("\n=== Pharmacists ===");
+        if (pharmacists.isEmpty()) {
+            System.out.println("No pharmacists registered.");
+            return;
+        }
+        pharmacists.forEach(System.out::println);
     }
 
     public void displayPrescriptions() {
@@ -598,16 +669,13 @@ class PharmacyManager {
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     System.out.print("Enter date (DD/MM/YYYY): ");
                     String date = scanner.nextLine();
                     reporter.generateDailySalesReport(date);
-                    break;
-                case 2:
-                    reporter.generateMedicineUsageReport();
-                    break;
-                default:
-                    System.out.println("Invalid choice!");
+                }
+                case 2 -> reporter.generateMedicineUsageReport();
+                default -> System.out.println("Invalid choice!");
             }
         } catch (InputMismatchException e) {
             System.out.println("Invalid input!");
@@ -741,6 +809,27 @@ class PharmacyManager {
         }
     }
 
+    public void deletePharmacistInteractive() {
+        try {
+            System.out.println("\n=== Delete Pharmacist ===");
+            System.out.print("Enter Pharmacist ID to delete: ");
+            int id = scanner.nextInt();
+
+            Pharmacist pharmacist = findPharmacist(id);
+            if (pharmacist == null) {
+                System.out.println("Pharmacist not found!");
+                return;
+            }
+
+            pharmacists.remove(pharmacist);
+            System.out.println("Pharmacist deleted successfully!");
+
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input! Please enter a valid ID.");
+            scanner.nextLine(); // Clear scanner
+        }
+    }
+
     // Direct deletion methods for programmatic use
     public boolean deleteDoctor(int id) {
         Doctor doctor = findDoctor(id);
@@ -804,29 +893,42 @@ class PharmacyManager {
 
 public class PharmacyManagementSystem {
     private static void displayMenu() {
+        System.out.println("*******************************************");
+        System.out.println("*                                         *");
+        System.out.println("*       Welcome to the Pharmacy           *");
+        System.out.println("*         Management System!              *");
+        System.out.println("*                                         *");
+        System.out.println("*******************************************");
         System.out.println("\n=== Pharmacy Management System ===");
-        System.out.println("1. Add Doctor");
-        System.out.println("2. Add Patient");
-        System.out.println("3. Add Medicine");
-        System.out.println("4. Create Prescription");
-        System.out.println("5. Display Doctors");
-        System.out.println("6. Display Patients");
-        System.out.println("7. Display Medicines");
-        System.out.println("8. Display Prescriptions");
-        System.out.println("9. Search Prescriptions by Doctor");
-        System.out.println("10. Search Prescriptions by Patient");
-        System.out.println("11. Check Low Stock");
-        System.out.println("12. Update Medicine Stock");
-        System.out.println("13. Generate Reports");
-        System.out.println("14. Delete Doctor");
-        System.out.println("15. Delete Patient");
-        System.out.println("16. Delete Medicine");
-        System.out.println("17. Delete Prescription");
-        System.out.println("0. Exit");
+        System.out.println("+----+-----------------------------------+");
+        System.out.printf("| %-3s | %-33s |%n", "No.", "Option");
+        System.out.println("+----+-----------------------------------+");
+        System.out.printf("| %-3s | %-33s |%n", "1.", "Add Doctor");
+        System.out.printf("| %-3s | %-33s |%n", "2.", "Add Patient");
+        System.out.printf("| %-3s | %-33s |%n", "3.", "Add Medicine");
+        System.out.printf("| %-3s | %-33s |%n", "4.", "Add Pharmacist");
+        System.out.printf("| %-3s | %-33s |%n", "5.", "Create Prescription");
+        System.out.printf("| %-3s | %-33s |%n", "6.", "Display Doctors");
+        System.out.printf("| %-3s | %-33s |%n", "7.", "Display Patients");
+        System.out.printf("| %-3s | %-33s |%n", "8.", "Display Medicines");
+        System.out.printf("| %-3s | %-33s |%n", "9.", "Display Prescriptions");
+        System.out.printf("| %-3s | %-33s |%n", "10.", "Display Pharmacists");
+        System.out.printf("| %-3s | %-33s |%n", "11.", "Search Prescriptions by Doctor");
+        System.out.printf("| %-3s | %-33s |%n", "12.", "Search Prescriptions by Patient");
+        System.out.printf("| %-3s | %-33s |%n", "13.", "Check Low Stock");
+        System.out.printf("| %-3s | %-33s |%n", "14.", "Update Medicine Stock");
+        System.out.printf("| %-3s | %-33s |%n", "15.", "Generate Reports");
+        System.out.printf("| %-3s | %-33s |%n", "16.", "Delete Doctor");
+        System.out.printf("| %-3s | %-33s |%n", "17.", "Delete Patient");
+        System.out.printf("| %-3s | %-33s |%n", "18.", "Delete Medicine");
+        System.out.printf("| %-3s | %-33s |%n", "19.", "Delete Prescription");
+        System.out.printf("| %-3s | %-33s |%n", "20.", "Delete Pharmacist");
+        System.out.printf("| %-3s | %-33s |%n", "0.", "Exit");
+        System.out.println("+----+-----------------------------------+");
         System.out.print("Enter your choice: ");
-    }
+        }
 
-    public static void main(String[] args) {
+        public static void main(String[] args) {
         PharmacyManager manager = new PharmacyManager();
         Scanner scanner = new Scanner(System.in);
 
@@ -842,71 +944,39 @@ public class PharmacyManagementSystem {
         while (true) {
             displayMenu();
             try {
-                int choice = scanner.nextInt();
+                int choice = Integer.parseInt(scanner.nextLine().trim());
 
                 switch (choice) {
-                    case 1:
-                        manager.addDoctorInteractive();
-                        break;
-                    case 2:
-                        manager.addPatientInteractive();
-                        break;
-                    case 3:
-                        manager.addMedicineInteractive();
-                        break;
-                    case 4:
-                        manager.createPrescriptionInteractive();
-                        break;
-                    case 5:
-                        manager.displayDoctors();
-                        break;
-                    case 6:
-                        manager.displayPatients();
-                        break;
-                    case 7:
-                        manager.displayMedicines();
-                        break;
-                    case 8:
-                        manager.displayPrescriptions();
-                        break;
-                    case 9:
-                        manager.searchPrescriptionsByDoctor();
-                        break;
-                    case 10:
-                        manager.searchPrescriptionsByPatient();
-                        break;
-                    case 11:
-                        manager.checkLowStock();
-                        break;
-                    case 12:
-                        manager.updateMedicineStock();
-                        break;
-                    case 13:
-                        manager.generateReports();
-                        break;
-                    case 14:
-                        manager.deleteDoctorInteractive();
-                        break;
-                    case 15:
-                        manager.deletePatientInteractive();
-                        break;
-                    case 16:
-                        manager.deleteMedicineInteractive();
-                        break;
-                    case 17:
-                        manager.deletePrescriptionInteractive();
-                        break;
-                    case 0:
+                    case 1 -> manager.addDoctorInteractive();
+                    case 2 -> manager.addPatientInteractive();
+                    case 3 -> manager.addMedicineInteractive();
+                    case 4 -> manager.addPharmacistInteractive();
+                    case 5 -> manager.createPrescriptionInteractive();
+                    case 6 -> manager.displayDoctors();
+                    case 7 -> manager.displayPatients();
+                    case 8 -> manager.displayMedicines();
+                    case 9 -> manager.displayPrescriptions();
+                    case 10 -> manager.displayPharmacists();
+                    case 11 -> manager.searchPrescriptionsByDoctor();
+                    case 12 -> manager.searchPrescriptionsByPatient();
+                    case 13 -> manager.checkLowStock();
+                    case 14 -> manager.updateMedicineStock();
+                    case 15 -> manager.generateReports();
+                    case 16 -> manager.deleteDoctorInteractive();
+                    case 17 -> manager.deletePatientInteractive();
+                    case 18 -> manager.deleteMedicineInteractive();
+                    case 19 -> manager.deletePrescriptionInteractive();
+                    case 20 -> manager.deletePharmacistInteractive();
+                    case 0 -> {
                         System.out.println("Thank you for using Pharmacy Management System!");
                         manager.close();
                         scanner.close();
                         return;
-                    default:
-                        System.out.println("Invalid choice! Please try again.");
+                    }
+                    default -> System.out.println("Invalid choice! Please try again.");
                 }
-            } catch (InputMismatchException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid input! Please enter a number.");
-                scanner.nextLine(); // Clear the scanner
             }
         }
     }
