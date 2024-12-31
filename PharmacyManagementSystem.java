@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+//tests
 class Medicine {
     private final int medicineId;
     private final String name;
