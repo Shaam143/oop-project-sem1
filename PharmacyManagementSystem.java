@@ -222,7 +222,7 @@ class InventoryManager {
         for (Medicine medicine : medicines) {
             if (medicine.getMedicineId() == medicineId) {
                 medicine.setQuantity(medicine.getQuantity() + quantity);
-                System.out.println(CYAN + "Stock updated successfully for " + medicine.getName());
+                System.out.println(MINT_GREEN + "Stock updated successfully for " + medicine.getName());
                 return;
             }
         }
@@ -257,7 +257,7 @@ class Pharmacist {
 
     @Override
     public String toString() {
-        return String.format(ORANGE + "Pharmacist ID: %d, Name: %s, Shift: %s" +,
+        return String.format(ORANGE + "Pharmacist ID: %d, Name: %s, Shift: %s",
                 pharmacistId, name, shift);
     }
 }
@@ -526,7 +526,7 @@ class PharmacyManager {
                     continue;
                 }
 
-                System.out.print(SKY_BLUE + "Quantity prescribed: ");
+                System.out.print(PEACH + "Quantity prescribed: ");
                 int quantity = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
 
@@ -638,18 +638,18 @@ class PharmacyManager {
 
     // Search methods
     public void searchPrescriptionsByDoctor() {
-        System.out.print(GREEN + "Enter Doctor ID: ");
+        System.out.print(ORANGE + "Enter Doctor ID: ");
         int docId = scanner.nextInt();
-        System.out.println(GREEN + "\n=== Prescriptions for Doctor ID: " + docId + " ===");
+        System.out.println(ORANGE + "\n=== Prescriptions for Doctor ID: " + docId + " ===");
         prescriptions.stream()
                 .filter(p -> p.getDoctorId() == docId)
                 .forEach(System.out::println);
     }
 
     public void searchPrescriptionsByPatient() {
-        System.out.print(GREEN + "Enter Patient ID: ");
+        System.out.print(ORANGE + "Enter Patient ID: ");
         int patId = scanner.nextInt();
-        System.out.println(GREEN + "\n=== Prescriptions for Patient ID: " + patId + " ===");
+        System.out.println(ORANGE + "\n=== Prescriptions for Patient ID: " + patId + " ===");
         prescriptions.stream()
                 .filter(p -> p.getPatientId() == patId)
                 .forEach(System.out::println);
