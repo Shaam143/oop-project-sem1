@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-//tests
+
 class Medicine {
+    public static final String ORANGE = "\u001B[38;5;214m"; 
     private final int medicineId;
     private final String name;
     private final String category;
@@ -52,12 +53,15 @@ class Medicine {
 
     @Override
     public String toString() {
-        return String.format("Medicine ID: %d, Name: %s, Category: %s, Quantity: %d, Price: RM%.2f",
+        return String.format(ORANGE + "Medicine ID: %d, Name: %s, Category: %s, Quantity: %d, Price: RM%.2f",
                 medicineId, name, category, quantity, price);
     }
 }
 
 class Prescription {
+    public static final String RED = "\u001B[31m";
+    public static final String BRIGHT_PURPLE = "\u001B[95m";
+    public static final String ORANGE = "\u001B[38;5;214m"; 
     private int prescriptionId;
     private int doctorId;
     private int patientId;
@@ -72,7 +76,7 @@ class Prescription {
         try {
             this.date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid date format. Please use DD/MM/YYYY");
+            throw new IllegalArgumentException(RED + "Invalid date format. Please use DD/MM/YYYY");
         }
         this.medicines = new ArrayList<>();
         this.status = "PENDING";
@@ -115,7 +119,7 @@ class Prescription {
     @Override
     public String toString() {
         StringBuilder details = new StringBuilder(String.format(
-                "Prescription ID: %d, Doctor ID: %d, Patient ID: %d, Date: %s, Status: %s\nMedicines:\n",
+                ORANGE + "Prescription ID: %d, Doctor ID: %d, Patient ID: %d, Date: %s, Status: %s\nMedicines:\n" ,
                 prescriptionId, doctorId, patientId, getDate(), status));
         for (Medicine medicine : medicines) {
             details.append(medicine).append("\n");
@@ -125,6 +129,7 @@ class Prescription {
 }
 
 class Doctor {
+    public static final String ORANGE = "\u001B[38;5;214m"; 
     private int doctorId;
     private String name;
     private String specialty;
@@ -151,12 +156,14 @@ class Doctor {
 
     @Override
     public String toString() {
-        return String.format("Doctor ID: %d, Name: %s, Specialty: %s, Contact: %s",
+        return String.format(ORANGE + "Doctor ID: %d, Name: %s, Specialty: %s, Contact: %s" ,
                 doctorId, name, specialty, contactNumber);
     }
 }
 
 class Patient {
+
+    public static final String ORANGE = "\u001B[38;5;214m"; 
     private int patientId;
     private String name;
     private int age;
@@ -181,12 +188,16 @@ class Patient {
 
     @Override
     public String toString() {
-        return String.format("Patient ID: %d, Name: %s, Age: %d, Contact: %s, Address: %s",
+        return String.format(ORANGE + "Patient ID: %d, Name: %s, Age: %d, Contact: %s, Address: %s",
                 patientId, name, age, contactNumber, address);
     }
 }
 
 class InventoryManager {
+    public static final String RED = "\u001B[31m";
+    public static final String MINT_GREEN = "\u001B[38;2;152;251;152m";
+    public static final String CYAN = "\u001B[36m";
+
     private ArrayList<Medicine> medicines;
 
     public InventoryManager(ArrayList<Medicine> medicines) {
@@ -194,17 +205,16 @@ class InventoryManager {
     }
 
     public void checkLowStock(int threshold) {
-        System.out.println("\n=== Low Stock Alert ===");
+        System.out.println(RED + "\n=== Low Stock Alert ===" );
         boolean hasLowStock = false;
         for (Medicine medicine : medicines) {
             if (medicine.getQuantity() <= threshold) {
-                System.out
-                        .println(medicine.getName() + " is low on stock. Current quantity: " + medicine.getQuantity());
+                System.out.println(RED + medicine.getName() + " is low on stock. Current quantity: " + medicine.getQuantity() );
                 hasLowStock = true;
             }
         }
         if (!hasLowStock) {
-            System.out.println("No medicines are below the threshold quantity.");
+            System.out.println(MINT_GREEN + "No medicines are below the threshold quantity." );
         }
     }
 
@@ -212,15 +222,17 @@ class InventoryManager {
         for (Medicine medicine : medicines) {
             if (medicine.getMedicineId() == medicineId) {
                 medicine.setQuantity(medicine.getQuantity() + quantity);
-                System.out.println("Stock updated successfully for " + medicine.getName());
+                System.out.println(CYAN + "Stock updated successfully for " + medicine.getName());
                 return;
             }
         }
-        System.out.println("Medicine not found!");
+        System.out.println(RED + "Medicine not found!");
     }
 }
 
 class Pharmacist {
+
+    public static final String ORANGE = "\u001B[38;5;214m"; 
     private int pharmacistId;
     private String name;
     private String shift;
@@ -245,12 +257,16 @@ class Pharmacist {
 
     @Override
     public String toString() {
-        return String.format("Pharmacist ID: %d, Name: %s, Shift: %s",
+        return String.format(ORANGE + "Pharmacist ID: %d, Name: %s, Shift: %s" +,
                 pharmacistId, name, shift);
     }
 }
 
 class ReportGenerator {
+
+    public static final String CYAN = "\u001B[36m";
+    public static final String PEACH = "\u001B[38;2;255;218;185m";
+
     private ArrayList<Prescription> prescriptions;
     private ArrayList<Medicine> medicines;
 
@@ -260,7 +276,7 @@ class ReportGenerator {
     }
 
     public void generateDailySalesReport(String date) {
-        System.out.println("\n=== Daily Sales Report for " + date + " ===");
+        System.out.println(CYAN + "\n=== Daily Sales Report for " + date + " ===");
         double totalSales = 0.0;
         int totalPrescriptions = 0;
 
@@ -278,7 +294,7 @@ class ReportGenerator {
     }
 
     public void generateMedicineUsageReport() {
-        System.out.println("\n=== Medicine Usage Report ===");
+        System.out.println(PEACH + "\n=== Medicine Usage Report ===");
         for (Medicine medicine : medicines) {
             int totalPrescribed = 0;
             for (Prescription prescription : prescriptions) {
@@ -295,6 +311,17 @@ class ReportGenerator {
 }
 
 class PharmacyManager {
+    public static final String RED = "\u001B[31m";
+    public static final String MINT_GREEN = "\u001B[38;2;152;251;152m"; 
+    public static final String YELLOW = "\u001B[33m"; 
+    public static final String PEACH = "\u001B[38;2;255;218;185m";   
+    public static final String SKY_BLUE = "\u001B[38;2;135;206;235m"; 
+    public static final String GREEN = "\u001B[32m";      
+    public static final String BRIGHT_PURPLE = "\u001B[95m"; 
+    public static final String CYAN = "\u001B[36m";
+    public static final String BRIGHT_CORAL = "\u001B[38;2;255;127;80m"; 
+    public static final String ORANGE = "\u001B[38;5;214m"; 
+
     private ArrayList<Doctor> doctors;
     private ArrayList<Patient> patients;
     private ArrayList<Medicine> medicines;
@@ -314,28 +341,28 @@ class PharmacyManager {
     // Direct object addition methods
     public void addDoctor(Doctor doctor) {
         if (findDoctor(doctor.getDoctorId()) != null) {
-            throw new IllegalArgumentException("Doctor ID already exists");
+            throw new IllegalArgumentException(RED + "Doctor ID already exists");
         }
         doctors.add(doctor);
     }
 
     public void addPatient(Patient patient) {
         if (findPatient(patient.getPatientId()) != null) {
-            throw new IllegalArgumentException("Patient ID already exists");
+            throw new IllegalArgumentException(RED + "Patient ID already exists");
         }
         patients.add(patient);
     }
 
     public void addMedicine(Medicine medicine) {
         if (findMedicine(medicine.getMedicineId()) != null) {
-            throw new IllegalArgumentException("Medicine ID already exists");
+            throw new IllegalArgumentException(RED + "Medicine ID already exists");
         }
         medicines.add(medicine);
     }
 
     public void addPrescription(Prescription prescription) {
         if (findPrescription(prescription.getPrescriptionId()) != null) {
-            throw new IllegalArgumentException("Prescription ID already exists");
+            throw new IllegalArgumentException(RED + "Prescription ID already exists");
         }
         prescriptions.add(prescription);
     }
@@ -343,168 +370,168 @@ class PharmacyManager {
     // Interactive addition methods
     public void addPharmacistInteractive() {
         try {
-            System.out.println("\nEnter Pharmacist Details:");
+            System.out.println(MINT_GREEN + "\nEnter Pharmacist Details:");
             System.out.print("ID: ");
             int id = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             if (findPharmacist(id) != null) {
-                System.out.println("Pharmacist ID already exists!");
+                System.out.println(RED + "Pharmacist ID already exists!");
                 return;
             }
 
-            System.out.print("Name: ");
+            System.out.print(MINT_GREEN + "Name: ");
             String name = scanner.nextLine();
-            System.out.print("Shift: ");
+            System.out.print(MINT_GREEN + "Shift: ");
             String shift = scanner.nextLine();
 
             pharmacists.add(new Pharmacist(id, name, shift));
-            System.out.println("Pharmacist added successfully!");
+            System.out.println(YELLOW + "Pharmacist added successfully!");
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter correct data types.");
+            System.out.println(RED + "Invalid input! Please enter correct data types.");
             scanner.nextLine(); // Clear the scanner
         }
     }
     public void addDoctorInteractive() {
         try {
-            System.out.println("\nEnter Doctor Details:");
-            System.out.print("ID: ");
+            System.out.println(MINT_GREEN + "\nEnter Doctor Details:");
+            System.out.print(MINT_GREEN + "ID: ");
             int id = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             if (findDoctor(id) != null) {
-                System.out.println("Doctor ID already exists!");
+                System.out.println(RED + "Doctor ID already exists!");
                 return;
             }
 
-            System.out.print("Name: ");
+            System.out.print(MINT_GREEN + "Name: ");
             String name = scanner.nextLine();
-            System.out.print("Specialty: ");
+            System.out.print(MINT_GREEN + "Specialty: ");
             String specialty = scanner.nextLine();
-            System.out.print("Contact Number: ");
+            System.out.print(MINT_GREEN + "Contact Number: ");
             String contact = scanner.nextLine();
 
             doctors.add(new Doctor(id, name, specialty, contact));
-            System.out.println("Doctor added successfully!");
+            System.out.println(YELLOW + "Doctor added successfully!");
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter correct data types.");
+            System.out.println(RED + "Invalid input! Please enter correct data types.");
             scanner.nextLine(); // Clear the scanner
         }
     }
 
     public void addPatientInteractive() {
         try {
-            System.out.println("\nEnter Patient Details:");
-            System.out.print("ID: ");
+            System.out.println(MINT_GREEN + "\nEnter Patient Details:");
+            System.out.print(MINT_GREEN + "ID: ");
             int id = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             if (findPatient(id) != null) {
-                System.out.println("Patient ID already exists!");
+                System.out.println(RED + "Patient ID already exists!");
                 return;
             }
 
-            System.out.print("Name: ");
+            System.out.print(MINT_GREEN + "Name: ");
             String name = scanner.nextLine();
-            System.out.print("Age: ");
+            System.out.print(MINT_GREEN + "Age: ");
             int age = scanner.nextInt();
             scanner.nextLine(); // Consume newline
-            System.out.print("Contact Number: ");
+            System.out.print(MINT_GREEN + "Contact Number: ");
             String contact = scanner.nextLine();
-            System.out.print("Address: ");
+            System.out.print(MINT_GREEN + "Address: ");
             String address = scanner.nextLine();
 
             patients.add(new Patient(id, name, age, contact, address));
-            System.out.println("Patient added successfully!");
+            System.out.println(YELLOW + "Patient added successfully!");
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter correct data types.");
+            System.out.println(RED + "Invalid input! Please enter correct data types.");
             scanner.nextLine(); // Clear the scanner
         }
     }
 
     public void addMedicineInteractive() {
         try {
-            System.out.println("\nEnter Medicine Details:");
-            System.out.print("ID: ");
+            System.out.println( MINT_GREEN + "\nEnter Medicine Details:");
+            System.out.print(MINT_GREEN + "ID: ");
             int id = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             if (findMedicine(id) != null) {
-                System.out.println("Medicine ID already exists!");
+                System.out.println(RED + "Medicine ID already exists!");
                 return;
             }
 
-            System.out.print("Name: ");
+            System.out.print(MINT_GREEN + "Name: ");
             String name = scanner.nextLine();
-            System.out.print("Category: ");
+            System.out.print(MINT_GREEN + "Category: ");
             String category = scanner.nextLine();
-            System.out.print("Quantity: ");
+            System.out.print(MINT_GREEN + "Quantity: ");
             int quantity = scanner.nextInt();
-            System.out.print("Price (RM): ");
+            System.out.print(MINT_GREEN + "Price (RM): ");
             double price = scanner.nextDouble();
 
             medicines.add(new Medicine(id, name, category, quantity, price));
-            System.out.println("Medicine added successfully!");
+            System.out.println(YELLOW + "Medicine added successfully!");
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter correct data types.");
+            System.out.println(RED + "Invalid input! Please enter correct data types.");
             scanner.nextLine(); // Clear the scanner
         }
     }
 
     public void createPrescriptionInteractive() {
         try {
-            System.out.println("\nEnter Prescription Details:");
-            System.out.print("Prescription ID: ");
+            System.out.println(PEACH + "\nEnter Prescription Details:");
+            System.out.print(PEACH + "Prescription ID: ");
             int presId = scanner.nextInt();
 
             if (findPrescription(presId) != null) {
-                System.out.println("Prescription ID already exists!");
+                System.out.println(PEACH + "Prescription ID already exists!");
                 return;
             }
 
-            System.out.print("Doctor ID: ");
+            System.out.print(PEACH + "Doctor ID: ");
             int docId = scanner.nextInt();
             Doctor doctor = findDoctor(docId);
             if (doctor == null) {
-                System.out.println("Doctor not found!");
+                System.out.println(RED + "Doctor not found!");
                 return;
             }
 
-            System.out.print("Patient ID: ");
+            System.out.print(PEACH + "Patient ID: ");
             int patId = scanner.nextInt();
             Patient patient = findPatient(patId);
             if (patient == null) {
-                System.out.println("Patient not found!");
+                System.out.println(RED + "Patient not found!");
                 return;
             }
 
             scanner.nextLine(); // Consume newline
-            System.out.print("Date (DD/MM/YYYY): ");
+            System.out.print(PEACH + "Date (DD/MM/YYYY): ");
             String date = scanner.nextLine();
 
             Prescription prescription = new Prescription(presId, docId, patId, date);
 
             while (true) {
-                System.out.print("Add medicine? (y/n): ");
+                System.out.print(PEACH + "Add medicine? (y/n): ");
                 String choice = scanner.nextLine().toLowerCase();
                 if (!choice.equals("y"))
                     break;
 
-                System.out.print("Medicine ID: ");
+                System.out.print(PEACH + "Medicine ID: ");
                 int medId = scanner.nextInt();
                 Medicine medicine = findMedicine(medId);
                 if (medicine == null) {
-                    System.out.println("Medicine not found!");
+                    System.out.println(RED + "Medicine not found!");
                     scanner.nextLine(); // Consume newline
                     continue;
                 }
 
-                System.out.print("Quantity prescribed: ");
+                System.out.print(SKY_BLUE + "Quantity prescribed: ");
                 int quantity = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
 
                 if (quantity > medicine.getQuantity()) {
-                    System.out.println("Insufficient stock!");
+                    System.out.println(RED + "Insufficient stock!");
                     continue;
                 }
 
@@ -521,9 +548,9 @@ class PharmacyManager {
             }
 
             prescriptions.add(prescription);
-            System.out.println("Prescription created successfully!");
+            System.out.println(YELLOW + "Prescription created successfully!");
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter correct data types.");
+            System.out.println(RED + "Invalid input! Please enter correct data types.");
             scanner.nextLine(); // Clear the scanner
         }
     }
@@ -565,45 +592,45 @@ class PharmacyManager {
 
     // Display methods (continued)
     public void displayDoctors() {
-        System.out.println("\n=== Doctors ===");
+        System.out.println(ORANGE + "\n=== Doctors ===");
         if (doctors.isEmpty()) {
-            System.out.println("No doctors registered.");
+            System.out.println(RED + "No doctors registered.");
             return;
         }
         doctors.forEach(System.out::println);
     }
 
     public void displayPatients() {
-        System.out.println("\n=== Patients ===");
+        System.out.println(ORANGE + "\n=== Patients ===");
         if (patients.isEmpty()) {
-            System.out.println("No patients registered.");
+            System.out.println(RED + "No patients registered.");
             return;
         }
         patients.forEach(System.out::println);
     }
 
     public void displayMedicines() {
-        System.out.println("\n=== Medicines ===");
+        System.out.println(ORANGE + "\n=== Medicines ===");
         if (medicines.isEmpty()) {
-            System.out.println("No medicines in inventory.");
+            System.out.println(RED + "No medicines in inventory.");
             return;
         }
         medicines.forEach(System.out::println);
     }
 
     public void displayPharmacists() {
-        System.out.println("\n=== Pharmacists ===");
+        System.out.println(ORANGE + "\n=== Pharmacists ===");
         if (pharmacists.isEmpty()) {
-            System.out.println("No pharmacists registered.");
+            System.out.println(RED + "No pharmacists registered.");
             return;
         }
         pharmacists.forEach(System.out::println);
     }
 
     public void displayPrescriptions() {
-        System.out.println("\n=== Prescriptions ===");
+        System.out.println(ORANGE + "\n=== Prescriptions ===");
         if (prescriptions.isEmpty()) {
-            System.out.println("No prescriptions recorded.");
+            System.out.println(RED + "No prescriptions recorded.");
             return;
         }
         prescriptions.forEach(System.out::println);
@@ -611,18 +638,18 @@ class PharmacyManager {
 
     // Search methods
     public void searchPrescriptionsByDoctor() {
-        System.out.print("Enter Doctor ID: ");
+        System.out.print(GREEN + "Enter Doctor ID: ");
         int docId = scanner.nextInt();
-        System.out.println("\n=== Prescriptions for Doctor ID: " + docId + " ===");
+        System.out.println(GREEN + "\n=== Prescriptions for Doctor ID: " + docId + " ===");
         prescriptions.stream()
                 .filter(p -> p.getDoctorId() == docId)
                 .forEach(System.out::println);
     }
 
     public void searchPrescriptionsByPatient() {
-        System.out.print("Enter Patient ID: ");
+        System.out.print(GREEN + "Enter Patient ID: ");
         int patId = scanner.nextInt();
-        System.out.println("\n=== Prescriptions for Patient ID: " + patId + " ===");
+        System.out.println(GREEN + "\n=== Prescriptions for Patient ID: " + patId + " ===");
         prescriptions.stream()
                 .filter(p -> p.getPatientId() == patId)
                 .forEach(System.out::println);
@@ -631,27 +658,27 @@ class PharmacyManager {
     // Inventory management methods
     public void checkLowStock() {
         try {
-            System.out.print("Enter stock threshold: ");
+            System.out.print(BRIGHT_PURPLE + "Enter stock threshold: ");
             int threshold = scanner.nextInt();
             InventoryManager inventoryManager = new InventoryManager(medicines);
             inventoryManager.checkLowStock(threshold);
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter a number.");
+            System.out.println(RED + "Invalid input! Please enter a number.");
             scanner.nextLine(); // Clear the scanner
         }
     }
 
     public void updateMedicineStock() {
         try {
-            System.out.print("Enter Medicine ID: ");
+            System.out.print(BRIGHT_PURPLE + "Enter Medicine ID: ");
             int id = scanner.nextInt();
-            System.out.print("Enter quantity to add: ");
+            System.out.print(BRIGHT_PURPLE + "Enter quantity to add: ");
             int quantity = scanner.nextInt();
 
             InventoryManager inventoryManager = new InventoryManager(medicines);
             inventoryManager.updateStock(id, quantity);
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter numbers only.");
+            System.out.println(RED + "Invalid input! Please enter numbers only.");
             scanner.nextLine(); // Clear the scanner
         }
     }
@@ -660,10 +687,10 @@ class PharmacyManager {
     public void generateReports() {
         ReportGenerator reporter = new ReportGenerator(prescriptions, medicines);
 
-        System.out.println("\n=== Report Generation ===");
-        System.out.println("1. Daily Sales Report");
-        System.out.println("2. Medicine Usage Report");
-        System.out.print("Enter your choice: ");
+        System.out.println(YELLOW + "\n=== Report Generation ===");
+        System.out.println(YELLOW + "1. Daily Sales Report");
+        System.out.println(YELLOW + "2. Medicine Usage Report");
+        System.out.print(YELLOW + "Enter your choice: ");
 
         try {
             int choice = scanner.nextInt();
@@ -671,15 +698,15 @@ class PharmacyManager {
 
             switch (choice) {
                 case 1 -> {
-                    System.out.print("Enter date (DD/MM/YYYY): ");
+                    System.out.print(CYAN + "Enter date (DD/MM/YYYY): ");
                     String date = scanner.nextLine();
                     reporter.generateDailySalesReport(date);
                 }
                 case 2 -> reporter.generateMedicineUsageReport();
-                default -> System.out.println("Invalid choice!");
+                default -> System.out.println(RED + "Invalid choice!");
             }
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input!");
+            System.out.println(RED + "Invalid input!");
             scanner.nextLine(); // Clear the scanner
         }
     }
@@ -692,8 +719,8 @@ class PharmacyManager {
 
     public void deleteDoctorInteractive() {
         try {
-            System.out.println("\n=== Delete Doctor ===");
-            System.out.print("Enter Doctor ID to delete: ");
+            System.out.println(BRIGHT_CORAL + "\n=== Delete Doctor ===");
+            System.out.print(BRIGHT_CORAL + "Enter Doctor ID to delete: ");
             int id = scanner.nextInt();
 
             // Check if doctor has any prescriptions
@@ -701,29 +728,29 @@ class PharmacyManager {
                     .anyMatch(p -> p.getDoctorId() == id);
 
             if (hasPresciptions) {
-                System.out.println("Cannot delete doctor with existing prescriptions!");
+                System.out.println(RED + "Cannot delete doctor with existing prescriptions!");
                 return;
             }
 
             Doctor doctor = findDoctor(id);
             if (doctor == null) {
-                System.out.println("Doctor not found!");
+                System.out.println(RED + "Doctor not found!");
                 return;
             }
 
             doctors.remove(doctor);
-            System.out.println("Doctor deleted successfully!");
+            System.out.println(YELLOW + "Doctor deleted successfully!");
 
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter a valid ID.");
+            System.out.println(RED + "Invalid input! Please enter a valid ID.");
             scanner.nextLine(); // Clear scanner
         }
     }
 
     public void deletePatientInteractive() {
         try {
-            System.out.println("\n=== Delete Patient ===");
-            System.out.print("Enter Patient ID to delete: ");
+            System.out.println(BRIGHT_CORAL + "\n=== Delete Patient ===");
+            System.out.print(BRIGHT_CORAL + "Enter Patient ID to delete: ");
             int id = scanner.nextInt();
 
             // Check if patient has any prescriptions
@@ -731,29 +758,29 @@ class PharmacyManager {
                     .anyMatch(p -> p.getPatientId() == id);
 
             if (hasPresciptions) {
-                System.out.println("Cannot delete patient with existing prescriptions!");
+                System.out.println(RED + "Cannot delete patient with existing prescriptions!");
                 return;
             }
 
             Patient patient = findPatient(id);
             if (patient == null) {
-                System.out.println("Patient not found!");
+                System.out.println(RED + "Patient not found!");
                 return;
             }
 
             patients.remove(patient);
-            System.out.println("Patient deleted successfully!");
+            System.out.println(YELLOW + "Patient deleted successfully!");
 
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter a valid ID.");
+            System.out.println(RED + "Invalid input! Please enter a valid ID.");
             scanner.nextLine(); // Clear scanner
         }
     }
 
     public void deleteMedicineInteractive() {
         try {
-            System.out.println("\n=== Delete Medicine ===");
-            System.out.print("Enter Medicine ID to delete: ");
+            System.out.println(BRIGHT_CORAL + "\n=== Delete Medicine ===");
+            System.out.print(BRIGHT_CORAL + "Enter Medicine ID to delete: ");
             int id = scanner.nextInt();
 
             // Check if medicine is used in any prescriptions
@@ -762,34 +789,34 @@ class PharmacyManager {
                     .anyMatch(m -> m.getMedicineId() == id);
 
             if (isUsedInPrescriptions) {
-                System.out.println("Cannot delete medicine that is used in prescriptions!");
+                System.out.println(RED + "Cannot delete medicine that is used in prescriptions!");
                 return;
             }
 
             Medicine medicine = findMedicine(id);
             if (medicine == null) {
-                System.out.println("Medicine not found!");
+                System.out.println(RED + "Medicine not found!");
                 return;
             }
 
             medicines.remove(medicine);
-            System.out.println("Medicine deleted successfully!");
+            System.out.println(YELLOW + "Medicine deleted successfully!");
 
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter a valid ID.");
+            System.out.println(RED + "Invalid input! Please enter a valid ID.");
             scanner.nextLine(); // Clear scanner
         }
     }
 
     public void deletePrescriptionInteractive() {
         try {
-            System.out.println("\n=== Delete Prescription ===");
-            System.out.print("Enter Prescription ID to delete: ");
+            System.out.println(BRIGHT_CORAL + "\n=== Delete Prescription ===");
+            System.out.print(BRIGHT_CORAL + "Enter Prescription ID to delete: ");
             int id = scanner.nextInt();
 
             Prescription prescription = findPrescription(id);
             if (prescription == null) {
-                System.out.println("Prescription not found!");
+                System.out.println(RED + "Prescription not found!");
                 return;
             }
 
@@ -802,31 +829,31 @@ class PharmacyManager {
             }
 
             prescriptions.remove(prescription);
-            System.out.println("Prescription deleted successfully and medicine quantities returned to inventory!");
+            System.out.println(YELLOW + "Prescription deleted successfully and medicine quantities returned to inventory!");
 
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter a valid ID.");
+            System.out.println(RED + "Invalid input! Please enter a valid ID.");
             scanner.nextLine(); // Clear scanner
         }
     }
 
     public void deletePharmacistInteractive() {
         try {
-            System.out.println("\n=== Delete Pharmacist ===");
-            System.out.print("Enter Pharmacist ID to delete: ");
+            System.out.println(BRIGHT_CORAL + "\n=== Delete Pharmacist ===");
+            System.out.print(BRIGHT_CORAL + "Enter Pharmacist ID to delete: ");
             int id = scanner.nextInt();
 
             Pharmacist pharmacist = findPharmacist(id);
             if (pharmacist == null) {
-                System.out.println("Pharmacist not found!");
+                System.out.println(RED + "Pharmacist not found!");
                 return;
             }
 
             pharmacists.remove(pharmacist);
-            System.out.println("Pharmacist deleted successfully!");
+            System.out.println(YELLOW + "Pharmacist deleted successfully!");
 
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter a valid ID.");
+            System.out.println(RED + "Invalid input! Please enter a valid ID.");
             scanner.nextLine(); // Clear scanner
         }
     }
@@ -893,41 +920,65 @@ class PharmacyManager {
 }
 
 public class PharmacyManagementSystem {
+    public static final String RESET = "\u001B[0m";
+    public static final String ORANGE = "\u001B[38;5;214m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String INDIGO = "\u001B[38;5;93m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String PEACH = "\u001B[38;2;255;218;185m";
+    public static final String MAGENTA = "\u001B[35m";
+    public static final String MINT_GREEN = "\u001B[38;2;152;251;152m";
+    public static final String SKY_BLUE = "\u001B[38;2;135;206;235m";
+    public static final String BRIGHT_CORAL = "\u001B[38;2;255;127;80m"; 
+    public static final String RED = "\u001B[31m";
+
     private static void displayMenu() {
-        System.out.println("*******************************************");
-        System.out.println("*                                         *");
-        System.out.println("*       Welcome to the Pharmacy           *");
-        System.out.println("*         Management System!              *");
-        System.out.println("*                                         *");
-        System.out.println("*******************************************");
-        System.out.println("\n=== Pharmacy Management System ===");
-        System.out.println("+----+-----------------------------------+");
-        System.out.printf("| %-3s | %-33s |%n", "No.", "Option");
-        System.out.println("+----+-----------------------------------+");
-        System.out.printf("| %-3s | %-33s |%n", "1.", "Add Doctor");
-        System.out.printf("| %-3s | %-33s |%n", "2.", "Add Patient");
-        System.out.printf("| %-3s | %-33s |%n", "3.", "Add Medicine");
-        System.out.printf("| %-3s | %-33s |%n", "4.", "Add Pharmacist");
-        System.out.printf("| %-3s | %-33s |%n", "5.", "Create Prescription");
-        System.out.printf("| %-3s | %-33s |%n", "6.", "Display Doctors");
-        System.out.printf("| %-3s | %-33s |%n", "7.", "Display Patients");
-        System.out.printf("| %-3s | %-33s |%n", "8.", "Display Medicines");
-        System.out.printf("| %-3s | %-33s |%n", "9.", "Display Prescriptions");
-        System.out.printf("| %-3s | %-33s |%n", "10.", "Display Pharmacists");
-        System.out.printf("| %-3s | %-33s |%n", "11.", "Search Prescriptions by Doctor");
-        System.out.printf("| %-3s | %-33s |%n", "12.", "Search Prescriptions by Patient");
-        System.out.printf("| %-3s | %-33s |%n", "13.", "Check Low Stock");
-        System.out.printf("| %-3s | %-33s |%n", "14.", "Update Medicine Stock");
-        System.out.printf("| %-3s | %-33s |%n", "15.", "Generate Reports");
-        System.out.printf("| %-3s | %-33s |%n", "16.", "Delete Doctor");
-        System.out.printf("| %-3s | %-33s |%n", "17.", "Delete Patient");
-        System.out.printf("| %-3s | %-33s |%n", "18.", "Delete Medicine");
-        System.out.printf("| %-3s | %-33s |%n", "19.", "Delete Prescription");
-        System.out.printf("| %-3s | %-33s |%n", "20.", "Delete Pharmacist");
-        System.out.printf("| %-3s | %-33s |%n", "0.", "Exit");
-        System.out.println("+----+-----------------------------------+");
-        System.out.print("Enter your choice: ");
-        }
+        System.out.println(YELLOW + "********************************************************" + RESET);
+        System.out.println(YELLOW + "*                                                      *" + RESET);
+        System.out.println(YELLOW + "*               Welcome to the Pharmacy                *" + RESET);
+        System.out.println(YELLOW + "*                 Management System!                   *" + RESET);
+        System.out.println(YELLOW + "*                                                      *" + RESET);
+        System.out.println(YELLOW + "********************************************************" + RESET);
+        System.out.println(YELLOW + "\n============== Pharmacy Management System ==============" + RESET);
+        System.out.println(YELLOW + "+--------+---------------------------------------------+" + RESET);
+        System.out.printf(YELLOW + "| %-5s | %-44s     |%n" , "Choice" , "                Description" + YELLOW);
+        System.out.println(YELLOW + "+--------+---------------------------------------------+" + RESET);
+        
+        printRow(ORANGE, "1", "Add Doctor");
+        printRow(ORANGE, "2", "Add Patient");
+        printRow(ORANGE, "3", "Add Medicine");
+        printRow(ORANGE, "4", "Add Pharmacist");
+        printRow(MINT_GREEN, "5", "Create Prescription");
+        printRow(CYAN, "6", "Display Doctors");
+        printRow(CYAN, "7", "Display Patients");
+        printRow(CYAN, "8", "Display Medicines");
+        printRow(CYAN, "9", "Display Prescriptions");
+        printRow(CYAN, "10", "Display Pharmacists");
+        printRow(PEACH, "11", "Search Prescriptions by Doctor");
+        printRow(PEACH, "12", "Search Prescriptions by Patient");
+        printRow(MAGENTA, "13", "Check Low Stock");
+        printRow(SKY_BLUE, "14", "Update Medicine Stock");
+        printRow(GREEN, "15", "Generate Reports");
+        printRow(INDIGO, "16", "Delete Doctor");
+        printRow(INDIGO, "17", "Delete Patient");
+        printRow(INDIGO, "18", "Delete Medicine");
+        printRow(INDIGO, "19", "Delete Prescription");
+        printRow(INDIGO, "20", "Delete Pharmacist");
+        printRow(BRIGHT_CORAL, "0", "Exit");
+    
+        System.out.println(YELLOW + "+--------+---------------------------------------------+" + RESET);
+    
+        System.out.print(CYAN + "Enter your choice: ");
+    }
+    
+    private static void printRow(String color, String choice, String description) {
+        System.out.print(YELLOW + "|" + RESET);
+        System.out.printf(color + " %-5s  " + RESET, choice);
+        System.out.print(YELLOW + "|" + RESET);
+        System.out.printf(color + " %-44s" + RESET, description);
+        System.out.println(YELLOW + "|" + RESET);
+    }
 
         public static void main(String[] args) {
         PharmacyManager manager = new PharmacyManager();
@@ -939,7 +990,7 @@ public class PharmacyManagementSystem {
             manager.addPatient(new Patient(101, "John Doe", 30, "098-765-4321", "123 Main St"));
             manager.addMedicine(new Medicine(301, "Paracetamol", "Painkiller", 100, 5.0));
         } catch (IllegalArgumentException e) {
-            System.out.println("Error adding sample data: " + e.getMessage());
+            System.out.println(RED + "Error adding sample data: " + e.getMessage());
         }
 
         while (true) {
@@ -969,15 +1020,15 @@ public class PharmacyManagementSystem {
                     case 19 -> manager.deletePrescriptionInteractive();
                     case 20 -> manager.deletePharmacistInteractive();
                     case 0 -> {
-                        System.out.println("Thank you for using Pharmacy Management System!");
+                        System.out.println(YELLOW + "Thank you for using Pharmacy Management System!");
                         manager.close();
                         scanner.close();
                         return;
                     }
-                    default -> System.out.println("Invalid choice! Please try again.");
+                    default -> System.out.println(RED + "Invalid choice! Please try again.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter a number.");
+                System.out.println(RED + "Invalid input! Please enter a number.");
             }
         }
     }
